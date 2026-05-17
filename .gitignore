@@ -1,2 +1,4 @@
 pico-sdk/
 build/
+compile_commands.json
+.cache/
