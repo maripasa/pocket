@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Fail if any fail and stop if any fail
 set -euo pipefail
 
 usage() {
@@ -33,7 +34,7 @@ COMPILE_COMMANDS_LINK="${ROOT_DIR}/compile_commands.json"
 cmake -S "${ROOT_DIR}" -B "${BUILD_DIR}" \
   -DPICO_BOARD="${BOARD}" \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=1
-
+# Makes lsp work
 if [[ -f "${COMPILE_COMMANDS_PATH}" ]]; then
   ln -sf "${COMPILE_COMMANDS_PATH}" "${COMPILE_COMMANDS_LINK}"
 fi
@@ -45,4 +46,5 @@ if [[ ! -f "${UF2_PATH}" ]]; then
   exit 1
 fi
 
+# You should download picotool! It's great, but you can always move the .uf2 to the RPI-RP2 mass-storage drive generated
 sudo picotool load "${UF2_PATH}" -xv

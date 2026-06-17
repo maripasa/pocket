@@ -1,34 +1,36 @@
-# board
+# Pocket 0.0.1 (Digital Riff) ABAVEH LABS
 
-Clone `pico-sdk`:
 
+## Setup
+
+Clone the Pico SDK inside this project:
 ```bash
 git clone https://github.com/raspberrypi/pico-sdk.git
-```
-
-Load the SDK submodules:
-
-```bash
 cd pico-sdk
 git submodule update --init --recursive
 cd ..
 ```
 
-Build:
-
-```bash
-cmake -S . -B build
-cmake --build build
-```
-
-Run and flash:
+Build and flash for pico:
 
 ```bash
 ./run.sh pico
 ```
 
-Or:
+Manual build:
 
 ```bash
-./run.sh pico_w
+cmake -S . -B build -DPICO_BOARD=pico
+cmake --build build
+picotool load build/board.uf2 -xv
+# Or move to RPI/RF2, if you don't have picotool
 ```
+
+## References
+
+- Pico SDK: https://github.com/raspberrypi/pico-sdk
+- Pico examples: https://github.com/raspberrypi/pico-examples
+- Pico C/C++ SDK documentation: https://www.raspberrypi.com/documentation/microcontrollers/c_sdk.html
+- Raspberry Pi Pico documentation: https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html
+- PCM1808 datasheet: https://www.ti.com/lit/ds/symlink/pcm1808.pdf
+- PCM5102 datasheet: https://www.ti.com/lit/ds/symlink/pcm5102.pdf

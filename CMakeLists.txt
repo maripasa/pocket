@@ -4,24 +4,24 @@ cmake_minimum_required(VERSION 3.13...3.27)
 # note: this must happen before project()
 include(pico-sdk/pico_sdk_init.cmake)
 
-project(board)
+project(board VERSION 0.0.1 LANGUAGES C CXX ASM)
 
-# initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 add_executable(board
     main.c
 )
 
-pico_enable_stdio_usb(board 1)
+pico_generate_pio_header(board ${CMAKE_CURRENT_LIST_DIR}/i2s_rx.pio)
+pico_generate_pio_header(board ${CMAKE_CURRENT_LIST_DIR}/i2s_tx.pio)
+
+pico_enable_stdio_usb(board 0)
 pico_enable_stdio_uart(board 0)
 
-# Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(board
+target_link_libraries(board PRIVATE
   pico_stdlib
-  hardware_adc
+  hardware_pio
   hardware_pwm
 )
 
-# create map/bin/hex/uf2 file in addition to ELF.
 pico_add_extra_outputs(board)

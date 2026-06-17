@@ -1,0 +1,44 @@
+
+; PCM1808 is in I2S mode: after LRC changes, the MSB appears one BCK later.
+; Because of that, this RX program intentionally waits one full BCK edge after
+; the LRC transition before reading bits. Without this delay, we read the wrong
+; bit positions and the audio can become obnoxiously loud or distorted.
+
+.program i2s_rx_left
+
+.wrap_target
+    ;detects hi lo transition on LRC, cool stuff
+    wait 1 gpio 1
+    wait 0 gpio 1
+    ;wait for lo hi transition on BCK
+    ;basicly skips a bit
+    wait 0 gpio 0
+    wait 1 gpio 0
+    ;puts 31 in PIO register x, loop counter
+    set x, 31
+left_loop:
+    ; Read one bit on each BCK cycle until a full 32-bit slot is captured.
+    wait 0 gpio 0
+    wait 1 gpio 0
+    ; read 1 bit from gp3
+    in pins, 1
+    jmp x-- left_loop
+    ; after 32 bits, it sends to C
+.wrap
+
+.program i2s_rx_right
+
+.wrap_target
+    wait 0 gpio 1
+    wait 1 gpio 1
+    ; Same I2S one-bit delay as the left channel.
+    wait 0 gpio 0
+    wait 1 gpio 0
+    set x, 31
+right_loop:
+    ; Right channel uses the same data pin, but waits for the opposite LRC phase.
+    wait 0 gpio 0
+    wait 1 gpio 0
+    in pins, 1
+    jmp x-- right_loop
+.wrap
