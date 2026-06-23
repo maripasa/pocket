@@ -59,7 +59,7 @@
 					(type default)
 				)
 				(fill
-					(type background)
+					(type none)
 				)
 			)
 		)
